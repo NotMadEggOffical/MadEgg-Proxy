@@ -1,0 +1,276 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MadEgg Proxy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Futura", Futura, serif;
+            background: url('https://cdn.dribbble.com/users/234525/screenshots/5853076/eggsacrosstheuniverse.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .time-date {
+            font-family: "Futura", Futura, serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .time-date:hover {
+            transform: scale(1.1);
+        }
+
+        .search-container {
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .search-bar {
+            font-family: "Futura", Futura, serif;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .search-bar::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-bar:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .bookmarks {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .bookmark {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 15px;
+            width: 90px;
+            height: 90px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .bookmark img {
+            max-width: 100%;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .bookmark span {
+            max-width: 100%;
+            height: auto;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .bookmark:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .bookmark img:hover {
+            transform: rotate(10deg) scale(1.2);
+        }
+
+        .add-bookmark {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .add-bookmark:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .add-bookmark-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            color: white;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .add-bookmark-modal input {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 100%;
+        }
+
+        .add-bookmark-modal button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #5192f5;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .add-bookmark-modal button:hover {
+            background: #3e81e6;
+        }
+
+        .top-right-menu {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .menu-button {
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .menu-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="time-date" id="time-date">1/18/2025 6:13:31 PM</div>
+
+    <div class="search-container">
+        <form action="proxy.php" method="get">
+            <input type="text" class="search-bar" name="url" placeholder="Search...">
+        </form>
+
+        <div class="bookmarks" id="bookmarks">
+            <a href="proxy.php?url=https://www.youtube.com" class="bookmark">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png" alt="YouTube">
+                <span>YouTube</span>
+            </a>
+            <a href="proxy.php?url=https://twitter.com" class="bookmark">
+                <img src="https://cdn.freebiesupply.com/logos/large/2x/twitter-3-logo-png-transparent.png" alt="Twitter">
+                <span>Twitter</span>
+            </a>
+            <a href="proxy.php?url=https://discord.com" class="bookmark">
+                <img src="https://cdn.prod.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png" alt="Discord">
+                <span>Discord</span>
+            </a>
+            <a href="proxy.php?url=https://www.nvidia.com/en-us/geforce-now/" class="bookmark">
+                <img src="https://www.nesabamedia.com/wp-content/uploads/2022/06/GeForce-NOW-Logo-1.png" alt="GeForce Now">
+                <span>GeForce Now</span>
+            </a>
+        </div>
+
+        <div class="add-bookmark" id="add-bookmark">+ Add Bookmark</div>
+
+        <div class="add-bookmark-modal" id="add-bookmark-modal">
+            <input type="text" id="bookmark-name" placeholder="Bookmark Name">
+            <input type="text" id="bookmark-url" placeholder="Bookmark URL">
+            <button id="save-bookmark">Save</button>
+        </div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            const dateString = now.toLocaleDateString();
+            document.getElementById('time-date').textContent = `${dateString} ${timeString}`;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        const addBookmarkButton = document.getElementById('add-bookmark');
+        const addBookmarkModal = document.getElementById('add-bookmark-modal');
+        const saveBookmarkButton = document.getElementById('save-bookmark');
+        const bookmarksContainer = document.getElementById('bookmarks');
+
+        addBookmarkButton.addEventListener('click', () => {
+            addBookmarkModal.style.display = 'flex';
+        });
+
+        saveBookmarkButton.addEventListener('click', () => {
+            const name = document.getElementById('bookmark-name').value;
+            const url = document.getElementById('bookmark-url').value;
+
+            if (name && url) {
+                const link = document.createElement('a');
+                link.href = `proxy.php?url=${encodeURIComponent(url)}`;
+                link.className = 'bookmark';
+
+                const img = document.createElement('img');
+                img.src = `https://www.google.com/s2/favicons?sz=64&domain_url=${encodeURIComponent(url)}`;
+                img.alt = name;
+                link.appendChild(img);
+
+                const span = document.createElement('span');
+                span.textContent = name;
+                link.appendChild(span);
+
+                bookmarksContainer.appendChild(link);
+
+                addBookmarkModal.style.display = 'none';
+            }
+        });
+    </script>
+
+
+</body></html>
